@@ -4,13 +4,13 @@
   "description": "The best way to watch videos.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "win": "node index.js"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Kitkat-42/wetube.git"
   },
-  "author": "Seoyoung Jeong",
+  "author": "Seoyoung Jeong<issy1022@gmail.com>",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/Kitkat-42/wetube/issues"
