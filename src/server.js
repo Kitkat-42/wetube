@@ -1,25 +1,33 @@
 import express from "express";
 const PORT = 4000;
-const app = express(); // express application(서버) 생성
+const app = express();
 
-const gossipMiddleware = (req, res, next) => {
-  console.log("I'm in the middle!");
+const logger = (req, res, next) => {
+  console.log(`${req.method} ${req.url}`);
   next();
 };
+const privateMiddleware = (req, res, next) => {
+  const url = req.url;
+  if (url === "/protected") {
+    return res.send("<h1>Not Allowed</h1>");
+  }
+  console.log("Allowed, you may continue.");
+  next();
+};
+app.use(logger); // app.use: global middleware를 사용할 수 있게 해준다.
+app.use(privateMiddleware);
 
 const handleHome = (req, res) => {
-  return res.send("I still love you"); // 페이지에 출력
-  //   return res.end(); // 그냥 종료시켜버림
+  return res.send("I still love you");
+};
+const handleProtected = (req, res) => {
+  return express.send("<h1>Not Allowed</h1>");
 };
 
-const handleLogin = (req, res) => {
-  return res.send("Login here.");
-};
+app.get("/", handleHome);
+app.get("/protected", handleProtected);
 
-app.get("/", gossipMiddleware, handleHome); //root page( / ) 로 GET request가 왔을 때 어떻게 행동할 건지 함수를 정해주는 것
-app.get("/login", handleLogin);
 const handleListening = () =>
   console.log(`Server listening on port http://localhost:${PORT} 🚀`);
 
-app.listen(PORT, handleListening); // 몇번 포트를 listening할 건지 정해준다.
-// handleListening: 콜백함수.
+app.listen(PORT, handleListening);
