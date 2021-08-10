@@ -2,32 +2,27 @@ import express from "express";
 const PORT = 4000;
 const app = express();
 
-const logger = (req, res, next) => {
-  console.log(`${req.method} ${req.url}`);
+const routerLogger = (req, res, next) => {
+  console.log("PATH", req.path);
   next();
 };
-const privateMiddleware = (req, res, next) => {
-  const url = req.url;
-  if (url === "/protected") {
-    return res.send("<h1>Not Allowed</h1>");
-  }
-  console.log("Allowed, you may continue.");
+const methodLogger = (req, res, next) => {
+  console.log("METHOD", req.method);
   next();
 };
-app.use(logger); // app.use: global middleware를 사용할 수 있게 해준다.
-app.use(privateMiddleware);
-
-const handleHome = (req, res) => {
-  return res.send("I still love you");
+const home = (req, res) => {
+  console.log("I will respond.");
+  res.send("hello");
 };
-const handleProtected = (req, res) => {
-  return express.send("<h1>Not Allowed</h1>");
+const login = (req, res) => {
+  return res.send("login");
 };
 
-app.get("/", handleHome);
-app.get("/protected", handleProtected);
+app.use(methodLogger, routerLogger); // 위에 있어야 "/", "/login" 모두에 적용이 됨
+app.get("/", home);
+app.get("/login", login);
 
 const handleListening = () =>
-  console.log(`Server listening on port http://localhost:${PORT} 🚀`);
+  console.log(`✅ Server listening on port http://localhost:${PORT} 🚀`);
 
 app.listen(PORT, handleListening);
